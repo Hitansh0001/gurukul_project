@@ -4,8 +4,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 import os
 from dotenv import load_dotenv
-from services.ai_service import AIService
-from services.youtube_service import YouTubeService
+from backend.services.gemini_service import GeminiService
+from backend.services.youtube_service import YouTubeService
 
 # Load environment variables
 load_dotenv()
@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 # Initialize services
-ai_service = AIService()
+ai_service = GeminiService()
 youtube_service = YouTubeService()
 
 # Pydantic models
@@ -68,6 +68,14 @@ async def root():
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "service": "AI Integration Template API"}
+
+@app.get("/api/service-info")
+async def get_service_info():
+    """Get information about configured AI services"""
+    return {
+        "ai_service": ai_service.get_service_info(),
+        "youtube_service": {"configured": bool(os.getenv("YOUTUBE_API_KEY"))}
+    }
 
 @app.post("/api/process-text", response_model=TextResponse)
 async def process_text(request: TextRequest):

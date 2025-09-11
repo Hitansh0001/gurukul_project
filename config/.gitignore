@@ -1,0 +1,17 @@
+# Ignore all API key files to prevent accidental commits
+*.txt
+*.key
+*.json
+*.yaml
+*.yml
+
+# But keep the README and this gitignore file
+!README.md
+!.gitignore
+
+# Additional security files to ignore
+*.pem
+*.p12
+*.pfx
+secrets/
+private/

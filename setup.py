@@ -59,12 +59,22 @@ def setup_environment():
             dst.write(src.read())
         print("✅ .env file created. Please configure your API keys.")
     
+    # Create config folder if it doesn't exist
+    config_path = Path(__file__).parent / "config"
+    if not config_path.exists():
+        config_path.mkdir()
+        print("📁 Created config folder for API keys")
+    
     print("\n🎉 Setup complete!")
     print("\nNext steps:")
-    print("1. Configure API keys in .env file (optional - app works in mock mode)")
-    print("2. Run: uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload")
-    print("3. Open frontend/index.html in your browser")
-    print("\n💡 Check README.md for detailed instructions")
+    print("1. Configure Gemini API key (choose one method):")
+    print("   • Environment variables (.env file): GEMINI_API_KEY=your_key")
+    print("   • Config file: config/gemini_api_key.txt")
+    print("2. Optional: Configure YouTube API key for video recommendations")
+    print("3. Run: uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload")
+    print("4. Open frontend/index.html in your browser")
+    print("\n💡 Check README.md and config/README.md for detailed instructions")
+    print("🔑 Get Gemini API key: https://makersuite.google.com/app/apikey")
     
     return True
 
