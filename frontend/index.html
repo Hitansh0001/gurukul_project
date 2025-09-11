@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Integration Template</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-robot"></i> AI Integration Template</h1>
+            <p>A template for AI integration with text processing and YouTube recommendations</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="input-container">
+                    <label for="user-input" class="input-label">
+                        <i class="fas fa-keyboard"></i> Enter your text
+                    </label>
+                    <textarea 
+                        id="user-input" 
+                        placeholder="Type your message here..." 
+                        rows="4"
+                    ></textarea>
+                    
+                    <div class="input-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="include-youtube" checked>
+                            <span class="checkmark"></span>
+                            Include YouTube recommendations
+                        </label>
+                        
+                        <label class="context-label">
+                            <i class="fas fa-cog"></i> Context (optional)
+                        </label>
+                        <input 
+                            type="text" 
+                            id="context-input" 
+                            placeholder="Provide context for better AI response..."
+                        >
+                    </div>
+
+                    <button id="submit-btn" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Process Text
+                    </button>
+                </div>
+            </section>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Processing your request...</p>
+            </div>
+
+            <!-- Results Section -->
+            <section class="results-section">
+                <!-- AI Text Response -->
+                <div id="text-response" class="response-container hidden">
+                    <h2><i class="fas fa-comment-dots"></i> AI Response</h2>
+                    <div class="response-content">
+                        <div class="response-text"></div>
+                        <div class="response-meta">
+                            <span class="timestamp"></span>
+                            <button class="copy-btn" onclick="copyResponse()">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- YouTube Recommendations -->
+                <div id="youtube-recommendations" class="recommendations-container hidden">
+                    <h2><i class="fab fa-youtube"></i> Related YouTube Videos</h2>
+                    <div class="recommendations-grid" id="recommendations-grid">
+                        <!-- Recommendations will be dynamically inserted here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Configuration Panel -->
+        <aside class="config-panel" id="config-panel">
+            <button class="config-toggle" id="config-toggle">
+                <i class="fas fa-cog"></i>
+            </button>
+            <div class="config-content">
+                <h3>Configuration</h3>
+                <div class="config-item">
+                    <label for="api-endpoint">API Endpoint:</label>
+                    <input type="text" id="api-endpoint" value="http://localhost:8000">
+                </div>
+                <div class="config-item">
+                    <label for="max-results">Max YouTube Results:</label>
+                    <input type="number" id="max-results" value="6" min="1" max="20">
+                </div>
+                <div class="config-status">
+                    <div class="status-indicator" id="api-status">
+                        <span class="status-dot"></span>
+                        <span>API Status: Unknown</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Error Toast -->
+        <div id="error-toast" class="toast error-toast hidden">
+            <i class="fas fa-exclamation-circle"></i>
+            <span class="toast-message"></span>
+            <button class="toast-close" onclick="hideToast()">×</button>
+        </div>
+
+        <!-- Success Toast -->
+        <div id="success-toast" class="toast success-toast hidden">
+            <i class="fas fa-check-circle"></i>
+            <span class="toast-message"></span>
+            <button class="toast-close" onclick="hideToast()">×</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 AI Integration Template | 
+            <a href="#" onclick="showApiDocs()">API Docs</a> | 
+            <a href="#" onclick="showHelp()">Help</a>
+        </p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
