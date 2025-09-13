@@ -63,4 +63,3 @@ If you prefer another backend language (Node.js, Go, Java, C#, etc.), implement 
 - CORS is enabled for development; adjust origins for production.
 - The YouTube API requires an API key. Without it, mock results are returned.
 - The AI service uses OpenAI Chat Completions if OPENAI_API_KEY is set, otherwise mock.
-
