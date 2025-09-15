@@ -114,7 +114,7 @@ async def get_combined_response(request: TextRequest):
         # Get YouTube recommendations based on the input
         youtube_recommendations = await youtube_service.get_recommendations(
             request.text, 
-            max_results=5
+            max_results=3
         )
         
         return {
