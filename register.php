@@ -11,7 +11,6 @@ $username_err = $email_err =  $password_err = $confirm_password_err = $type_err 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
-
     if (empty(trim($_POST["email"]))) {
         $email_err = "Please enter a email.";
     } else if (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
@@ -45,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_stmt_close($stmt);
         }
     }
+
     if (empty(trim($_POST["username"]))) {
         $username_err = "Please enter a username.";
     } else {
@@ -58,18 +58,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $password = trim($_POST["password"]);
     }
-    if (empty(trim($_POST["type"])) && trim($_POST["type"]) == 0) {
-        $type_err = "Please Select type";
-    } else {
-        if (trim($_POST["type"]) == 1) {
-            $type = 1;
-        } else if (trim($_POST["type"]) == 2) {
-            $type = 0;
-        }
-    }
-    if ($type == 0) {
-        $role = 'manager';
-    }
+    // if (empty(trim($_POST["type"])) && trim($_POST["type"]) == 0) {
+    //     $type_err = "Please Select type";
+    // } else {
+    //     if (trim($_POST["type"]) == 1) {
+    //         $type = 1;
+    //     } else if (trim($_POST["type"]) == 2) {
+    //         $type = 0;
+    //     }
+    // }
+    // if ($type == 0) {
+    //     $role = 'manager';
+    // }
 
     if (empty(trim($_POST["confirm_password"]))) {
         $confirm_password_err = "Please confirm password.";
@@ -84,15 +84,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($username_err) && empty($email_err) && empty($password_err) && empty($confirm_password_err) && empty($type_err)) {
 
 
-        $sql = "INSERT INTO users (username, email, password, type, role) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+        // echo $sql;
+        // print_r($conn);
+        // print_r($_POST);
 
         if ($stmt = mysqli_prepare($conn, $sql)) {
+            print_r($stmt);
 
             $param_email = $email;
             $param_password = password_hash($password, PASSWORD_DEFAULT);
 
 
-            mysqli_stmt_bind_param($stmt, "sssis", $username, $param_email, $param_password, $type, $role);
+            mysqli_stmt_bind_param($stmt, "sss", $username, $param_email, $param_password);
 
             if (mysqli_stmt_execute($stmt)) {
 
@@ -182,12 +186,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
                 </div>
                 <div class="mb-3">
-                    <label for="type" class="form-label">Type</label>
+                    <!-- <label for="type" class="form-label">Type</label>
                     <select name="type" class="form-control <?php echo (!empty($type_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $type_err; ?>" id="">
                         <option value="0">Select Type</option>
                         <option value="1">Individual</option>
                         <option value="2">Team</option>
-                    </select>
+                    </select> -->
                     <span class="invalid-feedback"><?php echo $type_err; ?></span>
 
                 </div>
