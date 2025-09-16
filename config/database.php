@@ -1,9 +1,9 @@
 <?php
 // Database configuration
-define('DB_SERVER', '192.168.2.34');
+define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
-define('DB_PASSWORD', 'Ex@mple123');
-define('DB_NAME', 'task_management');
+define('DB_PASSWORD', '');
+define('DB_NAME', 'gurukul');
 
 // define('DB_SERVER', '13.126.199.186');
 // define('DB_USERNAME', 'root');

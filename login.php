@@ -15,7 +15,6 @@ $email_err = $password_err = $login_err = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-
     if (empty(trim($_POST["email"]))) {
         $email_err = "Please enter email.";
     } else {
@@ -31,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($email_err) && empty($password_err)) {
 
-        $sql = "SELECT id, type, username, password, role FROM users WHERE email = ?";
+        $sql = "SELECT id, name, password FROM users WHERE email = ?";
 
         if ($stmt = mysqli_prepare($conn, $sql)) {
 
@@ -45,20 +44,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 if (mysqli_stmt_num_rows($stmt) == 1) {
 
-                    mysqli_stmt_bind_result($stmt, $id, $type, $username, $hashed_password, $role);
+                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
                     if (mysqli_stmt_fetch($stmt)) {
                         if (password_verify($password, $hashed_password)) {
 
                             session_start();
 
                             $_SESSION["user_id"] = $id;
-                            $_SESSION["user_type"] = $type;
+                            // $_SESSION["user_type"] = $type;
                             $_SESSION["username"] = $username;
-                            $_SESSION["role"] = $role;
+                            // $_SESSION["role"] = $role;
                             $_SESSION["last_activity"] = time();
                             $_SESSION["just_logged_in"] = 1;
 
-                            header("location: dashboard.php");
+                            header("location: frontend/index.html");
+                            exit;
                         } else {
                             $login_err = "Invalid password.";
                         }
@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <div class="login-container">
             <div class="login-header">
-                <h3>Task Management System</h3>
+                <h3>Gurukul</h3>
                 <p>Please fill in your credentials to login.</p>
             </div>
 
