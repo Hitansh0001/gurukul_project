@@ -4,8 +4,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 import os
 from dotenv import load_dotenv
-from backend.services.gemini_service import GeminiService
-from backend.services.youtube_service import YouTubeService
+from backend.services.simple_gemini_service import GeminiService
+from backend.services.simple_youtube_service import YouTubeService
 
 # Load environment variables
 load_dotenv()
@@ -96,7 +96,7 @@ async def get_youtube_recommendations(request: YouTubeRequest):
     try:
         recommendations = await youtube_service.get_recommendations(
             request.query, 
-            max_results=request.max_results
+            max_results=request.max_results or 10
         )
         return recommendations
     except Exception as e:

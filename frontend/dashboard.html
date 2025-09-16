@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Student Helper AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Student Helper AI</h1>
+        <nav>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="notes.html">Notes</a>
+            <a href="tasks.html">Tasks</a>
+            <a href="schedule.html">Schedule</a>
+            <a href="ai-chat.html">AI Chat</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-main">
+        <section class="welcome-section">
+            <h2>Welcome back, Abhinav!</h2>
+            <p>Here's your academic overview for today</p>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Pending Tasks</h3>
+                <div class="stat-number">3</div>
+                <p>assignments due this week</p>
+            </div>
+            <div class="stat-card">
+                <h3>Notes Created</h3>
+                <div class="stat-number">12</div>
+                <p>this month</p>
+            </div>
+            <div class="stat-card">
+                <h3>Study Hours</h3>
+                <div class="stat-number">24</div>
+                <p>this week</p>
+            </div>
+            <div class="stat-card">
+                <h3>Upcoming Events</h3>
+                <div class="stat-number">2</div>
+                <p>classes today</p>
+            </div>
+        </section>
+
+        <section class="quick-access">
+            <h2>Quick Access</h2>
+            <div class="quick-buttons">
+                <a href="notes.html" class="quick-btn">📝 Create Note</a>
+                <a href="tasks.html" class="quick-btn">✅ Add Task</a>
+                <a href="schedule.html" class="quick-btn">📅 View Schedule</a>
+                <a href="ai-chat.html" class="quick-btn">🤖 Ask AI</a>
+            </div>
+        </section>
+
+        <section class="recent-activity">
+            <h2>Recent Activity</h2>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <span class="activity-time">2 hours ago</span>
+                    <span class="activity-text">Completed "Physics Lab Report"</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-time">Yesterday</span>
+                    <span class="activity-text">Created note "Calculus II - Integration"</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-time">2 days ago</span>
+                    <span class="activity-text">Added task "Read Chapter 5 History"</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="api-status-section">
+            <h2>API Connection Status</h2>
+            <div class="api-status-grid">
+                <div class="status-card">
+                    <div class="status-header">
+                        <h3>🔗 Backend API</h3>
+                        <div class="status-indicator" id="backend-status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Checking...</span>
+                        </div>
+                    </div>
+                    <div class="status-details">
+                        <p>Endpoint: <span id="api-endpoint-display">http://localhost:8000</span></p>
+                        <p>Last checked: <span id="last-check-time">Never</span></p>
+                        <button onclick="testBackendAPI()" class="test-btn">Test Connection</button>
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-header">
+                        <h3>🤖 AI Service</h3>
+                        <div class="status-indicator" id="ai-status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Not tested</span>
+                        </div>
+                    </div>
+                    <div class="status-details">
+                        <p>Service: OpenAI/Gemini Integration</p>
+                        <p>Response time: <span id="ai-response-time">--</span></p>
+                        <button onclick="testAIService()" class="test-btn">Test AI</button>
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-header">
+                        <h3>📺 YouTube API</h3>
+                        <div class="status-indicator" id="youtube-status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Not tested</span>
+                        </div>
+                    </div>
+                    <div class="status-details">
+                        <p>Service: YouTube Data API v3</p>
+                        <p>Quota usage: <span id="youtube-quota">Unknown</span></p>
+                        <button onclick="testYouTubeService()" class="test-btn">Test YouTube</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-config">
+                <h3>API Configuration</h3>
+                <div class="config-form">
+                    <label for="api-endpoint-input">Backend Endpoint:</label>
+                    <input type="text" id="api-endpoint-input" value="http://localhost:8000" placeholder="Enter API endpoint">
+                    <button onclick="updateAPIEndpoint()" class="update-btn">Update</button>
+                </div>
+                <div class="test-all-section">
+                    <button onclick="testAllAPIs()" class="test-all-btn">🔄 Test All APIs</button>
+                    <button onclick="toggleAutoCheck()" class="auto-check-btn" id="auto-check-btn">🔄 Enable Auto-Check</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

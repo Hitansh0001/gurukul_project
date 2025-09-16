@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes - Student Helper AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Student Helper AI</h1>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="notes.html" class="active">Notes</a>
+            <a href="tasks.html">Tasks</a>
+            <a href="schedule.html">Schedule</a>
+            <a href="ai-chat.html">AI Chat</a>
+        </nav>
+    </header>
+
+    <main class="notes-main">
+        <section class="page-header">
+            <h2>My Notes</h2>
+            <button class="add-btn" onclick="createNewNote()">+ New Note</button>
+        </section>
+
+        <section class="notes-grid">
+            <div class="note-card">
+                <h3>Calculus II</h3>
+                <p>Integration techniques and applications...</p>
+                <div class="note-meta">
+                    <span>Last edited: Yesterday</span>
+                    <div class="note-actions">
+                        <button onclick="editNote(1)">Edit</button>
+                        <button onclick="deleteNote(1)">Delete</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="note-card">
+                <h3>Modern European History</h3>
+                <p>Chapter 5: Industrial Revolution impacts...</p>
+                <div class="note-meta">
+                    <span>Last edited: Yesterday</span>
+                    <div class="note-actions">
+                        <button onclick="editNote(2)">Edit</button>
+                        <button onclick="deleteNote(2)">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="note-card">
+                <h3>Physics Lab</h3>
+                <p>Experiment results and analysis...</p>
+                <div class="note-meta">
+                    <span>Last edited: 2 days ago</span>
+                    <div class="note-actions">
+                        <button onclick="editNote(3)">Edit</button>
+                        <button onclick="deleteNote(3)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Note Editor Modal (Hidden by default) -->
+        <div id="note-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close" onclick="closeNoteModal()">&times;</span>
+                <h3 id="modal-title">New Note</h3>
+                <input type="text" id="note-title" placeholder="Note title...">
+                <textarea id="note-content" placeholder="Write your note here..."></textarea>
+                <div class="modal-actions">
+                    <button onclick="saveNote()">Save</button>
+                    <button onclick="closeNoteModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

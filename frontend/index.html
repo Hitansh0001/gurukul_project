@@ -3,134 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Integration Template</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Student Helper AI</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1><i class="fas fa-robot"></i> AI Integration Template</h1>
-            <p>A template for AI integration with text processing and YouTube recommendations</p>
-        </header>
+    <header>
+        <h1>Student Helper AI</h1>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="notes.html">Notes</a>
+            <a href="tasks.html">Tasks</a>
+            <a href="schedule.html">Schedule</a>
+            <a href="ai-chat.html">AI Chat</a>
+        </nav>
+    </header>
 
-        <main class="main-content">
-            <!-- Input Section -->
-            <section class="input-section">
-                <div class="input-container">
-                    <label for="user-input" class="input-label">
-                        <i class="fas fa-keyboard"></i> Enter your text
-                    </label>
-                    <textarea 
-                        id="user-input" 
-                        placeholder="Type your message here..." 
-                        rows="4"
-                    ></textarea>
-                    
-                    <div class="input-options">
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="include-youtube" checked>
-                            <span class="checkmark"></span>
-                            Include YouTube recommendations
-                        </label>
-                        
-                        <label class="context-label">
-                            <i class="fas fa-cog"></i> Context (optional)
-                        </label>
-                        <input 
-                            type="text" 
-                            id="context-input" 
-                            placeholder="Provide context for better AI response..."
-                        >
-                    </div>
+    <main class="home-main">
+        <section class="notes">
+            <h2>Recent Notes</h2>
+            <div class="note-item">Calculus II <span>Last edited: Yesterday</span></div>
+            <div class="note-item">Modern European History <span>Last edited: Yesterday</span></div>
+            <a href="notes.html" class="view-all">View All Notes →</a>
+        </section>
 
-                    <button id="submit-btn" class="submit-btn">
-                        <i class="fas fa-paper-plane"></i>
-                        Process Text
-                    </button>
-                </div>
-            </section>
+        <section class="assignments">
+            <h2>Upcoming Assignments</h2>
+            <label><input type="checkbox" aria-label="Finish Physics Lab Report"> Finish Physics Lab Report (Due: Today) <span>7%</span></label><br>
+            <label><input type="checkbox" aria-label="Read Chapter 5 History"> Read Chapter 5 History</label><br>
+            <label><input type="checkbox" aria-label="Complete Math Problem Set"> Complete Math Problem Set</label>
+            <a href="tasks.html" class="view-all">View All Tasks →</a>
+        </section>
 
-            <!-- Loading Indicator -->
-            <div id="loading" class="loading hidden">
-                <div class="spinner"></div>
-                <p>Processing your request...</p>
+        <section class="schedule">
+            <h2>Today's Schedule</h2>
+            <div class="schedule-buttons">
+                <button class="subject-btn history">History - 9:00 AM</button>
+                <button class="subject-btn science">Physics Lab - 11:00 AM</button>
+                <button class="subject-btn programming">Programming - 2:00 PM</button>
             </div>
+            <a href="schedule.html" class="view-all">View Full Schedule →</a>
+        </section>
 
-            <!-- Results Section -->
-            <section class="results-section">
-                <!-- AI Text Response -->
-                <div id="text-response" class="response-container hidden">
-                    <h2><i class="fas fa-comment-dots"></i> AI Response</h2>
-                    <div class="response-content">
-                        <div class="response-text"></div>
-                        <div class="response-meta">
-                            <span class="timestamp"></span>
-                            <button class="copy-btn" onclick="copyResponse()">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        </div>
-                    </div>
-                </div>
+        <section class="quick-ai">
+            <h2>Quick AI Help</h2>
+            <p>Need instant help with your studies?</p>
+            <a href="ai-chat.html" class="ai-btn">🤖 Start AI Chat</a>
+        </section>
+    </main>
 
-                <!-- YouTube Recommendations -->
-                <div id="youtube-recommendations" class="recommendations-container hidden">
-                    <h2><i class="fab fa-youtube"></i> Related YouTube Videos</h2>
-                    <div class="recommendations-grid" id="recommendations-grid">
-                        <!-- Recommendations will be dynamically inserted here -->
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Configuration Panel -->
-        <aside class="config-panel" id="config-panel">
-            <button class="config-toggle" id="config-toggle">
-                <i class="fas fa-cog"></i>
-            </button>
-            <div class="config-content">
-                <h3>Configuration</h3>
-                <div class="config-item">
-                    <label for="api-endpoint">API Endpoint:</label>
-                    <input type="text" id="api-endpoint" value="http://localhost:8000">
-                </div>
-                <div class="config-item">
-                    <label for="max-results">Max YouTube Results:</label>
-                    <input type="number" id="max-results" value="6" min="1" max="20">
-                </div>
-                <div class="config-status">
-                    <div class="status-indicator" id="api-status">
-                        <span class="status-dot"></span>
-                        <span>API Status: Unknown</span>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Error Toast -->
-        <div id="error-toast" class="toast error-toast hidden">
-            <i class="fas fa-exclamation-circle"></i>
-            <span class="toast-message"></span>
-            <button class="toast-close" onclick="hideToast()">×</button>
-        </div>
-
-        <!-- Success Toast -->
-        <div id="success-toast" class="toast success-toast hidden">
-            <i class="fas fa-check-circle"></i>
-            <span class="toast-message"></span>
-            <button class="toast-close" onclick="hideToast()">×</button>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; 2024 AI Integration Template | 
-            <a href="#" onclick="showApiDocs()">API Docs</a> | 
-            <a href="#" onclick="showHelp()">Help</a>
-        </p>
-    </footer>
-
-    <script src="script.js"></script>
+    <script>
+        // Redirect to dashboard after 2 seconds or on any click
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 3000);
+        
+        document.addEventListener('click', () => {
+            window.location.href = 'dashboard.html';
+        });
+    </script>
 </body>
 </html>

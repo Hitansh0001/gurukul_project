@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Student Helper AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Student Helper AI</h1>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="notes.html">Notes</a>
+            <a href="tasks.html" class="active">Tasks</a>
+            <a href="schedule.html">Schedule</a>
+            <a href="ai-chat.html">AI Chat</a>
+        </nav>
+    </header>
+
+    <main class="tasks-main">
+        <section class="page-header">
+            <h2>Weekly Assignments</h2>
+            <button class="add-btn" onclick="createNewTask()">+ New Task</button>
+        </section>
+
+        <section class="tasks-section">
+            <div class="task-filters">
+                <button class="filter-btn active" onclick="filterTasks('all')">All</button>
+                <button class="filter-btn" onclick="filterTasks('pending')">Pending</button>
+                <button class="filter-btn" onclick="filterTasks('completed')">Completed</button>
+                <button class="filter-btn" onclick="filterTasks('overdue')">Overdue</button>
+            </div>
+
+            <div class="tasks-list">
+                <div class="task-item pending" data-status="pending">
+                    <label class="task-checkbox">
+                        <input type="checkbox" onchange="toggleTask(1)" aria-label="Mark Physics Lab Report as complete">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="task-content">
+                        <span class="task-title">Finish Physics Lab Report</span>
+                        <span class="task-due">Due: Today</span>
+                        <span class="task-progress">Progress: 7%</span>
+                    </div>
+                    <div class="task-actions">
+                        <button onclick="editTask(1)">Edit</button>
+                        <button onclick="deleteTask(1)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="task-item pending" data-status="pending">
+                    <label class="task-checkbox">
+                        <input type="checkbox" onchange="toggleTask(2)" aria-label="Mark Read Chapter 5 History as complete">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="task-content">
+                        <span class="task-title">Read Chapter 5 History</span>
+                        <span class="task-due">Due: Tomorrow</span>
+                        <span class="task-progress">Progress: 0%</span>
+                    </div>
+                    <div class="task-actions">
+                        <button onclick="editTask(2)">Edit</button>
+                        <button onclick="deleteTask(2)">Delete</button>
+                    </div>
+                </div>
+
+                <div class="task-item pending" data-status="pending">
+                    <label class="task-checkbox">
+                        <input type="checkbox" onchange="toggleTask(3)" aria-label="Mark Complete Math Problem Set as complete">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="task-content">
+                        <span class="task-title">Complete Math Problem Set</span>
+                        <span class="task-due">Due: Friday</span>
+                        <span class="task-progress">Progress: 0%</span>
+                    </div>
+                    <div class="task-actions">
+                        <button onclick="editTask(3)">Edit</button>
+                        <button onclick="deleteTask(3)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task Editor Modal -->
+        <div id="task-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close" onclick="closeTaskModal()">&times;</span>
+                <h3 id="task-modal-title">New Task</h3>
+                <input type="text" id="task-title-input" placeholder="Task title...">
+                <label for="task-due-date">Due Date:</label>
+                <input type="date" id="task-due-date" aria-label="Task due date">
+                <textarea id="task-description" placeholder="Task description..."></textarea>
+                <div class="modal-actions">
+                    <button onclick="saveTask()">Save</button>
+                    <button onclick="closeTaskModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
