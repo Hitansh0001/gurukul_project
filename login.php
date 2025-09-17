@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION["last_activity"] = time();
                             $_SESSION["just_logged_in"] = 1;
 
-                            header("location: frontend/index.html");
+                            header("location: frontend/dashboard.php");
                             exit;
                         } else {
                             $login_err = "Invalid password.";

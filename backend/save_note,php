@@ -1,0 +1,28 @@
+<?php
+require_once "config/database.php";
+
+session_start();
+
+if (isset($_SESSION["user_id"])) {
+    header("location: dashboard.php");
+    exit;
+}
+
+$title = $_POST['title'];
+$content = $_POST['content'];
+$user_id = 1; 
+
+$sql = "INSERT INTO notes (user_id, title, content) VALUES (?, ?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("iss", $user_id, $title, $content);
+
+if ($stmt->execute()) {
+    echo "Note saved successfully!";
+    header("Location: notes.php"); 
+    exit();
+} else {
+    echo "Error: " . $stmt->error;
+}
+
+$conn->close();
+?>
