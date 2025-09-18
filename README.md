@@ -56,6 +56,7 @@ The application works with **mock responses** by default. To enable real AI resp
    YOUTUBE_API_KEY=your_actual_youtube_key_here
    ```
 
+<<<<<<< HEAD
 2. **Restart the server** after adding keys
 
 ## 🌐 Endpoints
@@ -140,3 +141,9 @@ If you encounter issues:
 2. Verify the backend server is running
 3. Test API endpoints manually using `/docs`
 4. Check the `.env` file configuration
+=======
+## Notes
+- CORS is enabled for development; adjust origins for production.
+- The YouTube API requires an API key. Without it, mock results are returned.
+- The AI service uses OpenAI Chat Completions if OPENAI_API_KEY is set, otherwise mock.
+>>>>>>> gurukul/main
