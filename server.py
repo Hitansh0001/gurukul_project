@@ -1,33 +1,51 @@
+#!/usr/bin/env python3
+import sys
+import os
+from pathlib import Path
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
-import os
 from dotenv import load_dotenv
-from backend.services.simple_gemini_service import GeminiService
-from backend.services.simple_youtube_service import YouTubeService
+import uvicorn
 
-# Load environment variables
+# Setup
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
 load_dotenv()
 
-app = FastAPI(
-    title="AI Integration Template API",
-    description="A template for AI integration with text processing and YouTube recommendations",
-    version="1.0.0"
-)
-
-# CORS middleware configuration
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "*"],  # Configure as needed
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+from backend.services.simple_gemini_service import GeminiService
+from backend.services.simple_youtube_service import YouTubeService
 
 # Initialize services
 ai_service = GeminiService()
 youtube_service = YouTubeService()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("🌟 Server starting up...")
+    print(f"AI Service: {ai_service.get_service_info()['service']}")
+    print(f"YouTube Service: {'✅ Configured' if youtube_service.is_configured() else '⚠️ Mock Mode'}")
+    print("🚀 Server ready!")
+    yield
+    print("👋 Server shutting down...")
+
+# Create FastAPI app
+app = FastAPI(
+    title="AI Integration Template API",
+    description="A template for AI integration with text processing and YouTube recommendations",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Pydantic models
 class TextRequest(BaseModel):
@@ -51,6 +69,7 @@ class YouTubeRequest(BaseModel):
     query: str
     max_results: Optional[int] = 10
 
+# API Endpoints
 @app.get("/")
 async def root():
     """Root endpoint with API information"""
@@ -79,9 +98,7 @@ async def get_service_info():
 
 @app.post("/api/process-text", response_model=TextResponse)
 async def process_text(request: TextRequest):
-    """
-    Process text input and return AI-generated response
-    """
+    """Process text input and return AI-generated response"""
     try:
         response = await ai_service.process_text(request.text, request.context)
         return response
@@ -90,9 +107,7 @@ async def process_text(request: TextRequest):
 
 @app.post("/api/youtube-recommendations", response_model=List[YouTubeRecommendation])
 async def get_youtube_recommendations(request: YouTubeRequest):
-    """
-    Get YouTube video recommendations based on query with thumbnails and clickable links
-    """
+    """Get YouTube video recommendations based on query"""
     try:
         recommendations = await youtube_service.get_recommendations(
             request.query, 
@@ -104,9 +119,7 @@ async def get_youtube_recommendations(request: YouTubeRequest):
 
 @app.post("/api/combined-response")
 async def get_combined_response(request: TextRequest):
-    """
-    Get both AI text response and related YouTube recommendations
-    """
+    """Get both AI text response and related YouTube recommendations"""
     try:
         # Process text with AI
         text_response = await ai_service.process_text(request.text, request.context)
@@ -124,6 +137,9 @@ async def get_combined_response(request: TextRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Combined response failed: {str(e)}")
 
+
+
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import os
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")

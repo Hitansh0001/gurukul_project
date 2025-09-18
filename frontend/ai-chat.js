@@ -76,10 +76,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Try to get AI response from backend first
-        getAIResponseFromBackend(message)
+        getCombinedResponseFromBackend(message)
             .then(response => {
                 hideTypingIndicator();
-                addMessage(response, 'ai');
+                addMessage(response.text_response, 'ai');
+                
+                // Add YouTube recommendations if available
+                if (response.youtube_recommendations && response.youtube_recommendations.length > 0) {
+                    addYouTubeRecommendations(response.youtube_recommendations);
+                }
                 
                 // Play notification sound if enabled
                 if (soundNotifications && soundNotifications.checked) {
@@ -96,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Show warning about backend connection
                 setTimeout(() => {
-                    addMessage('⚠️ Note: I\'m currently using offline responses. For better AI assistance, please ensure the backend server is running.', 'ai');
+                    addMessage('⚠️ Note: I\'m currently using offline responses. For better AI assistance and YouTube recommendations, please ensure the backend server is running with valid API keys.', 'ai');
                 }, 1000);
             })
             .finally(() => {
@@ -106,9 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    async function getAIResponseFromBackend(message) {
+    async function getCombinedResponseFromBackend(message) {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/process-text`, {
+            const response = await fetch(`${API_BASE_URL}/api/combined-response`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,10 +129,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const data = await response.json();
-            return data.response || 'I received your message but couldn\'t generate a proper response. Please try again.';
+            return {
+                text_response: data.text_response?.response || 'I received your message but couldn\'t generate a proper response. Please try again.',
+                youtube_recommendations: data.youtube_recommendations || []
+            };
             
         } catch (error) {
-            console.error('Backend request error:', error);
+            console.error('Backend combined request error:', error);
             throw error;
         }
     }
@@ -158,6 +166,69 @@ document.addEventListener('DOMContentLoaded', function() {
         
         chatBox.appendChild(messageDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+    function addYouTubeRecommendations(recommendations) {
+        if (!chatBox || !recommendations || recommendations.length === 0) return;
+        
+        const recommendationsDiv = document.createElement('div');
+        recommendationsDiv.className = 'message ai-message youtube-recommendations';
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.textContent = '🎥';
+        
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
+        
+        let htmlContent = '<strong>📹 Related Video Recommendations:</strong><div class="youtube-videos">';
+        
+        recommendations.forEach(video => {
+            htmlContent += `
+                <div class="youtube-video" onclick="openVideo('${video.url}', '${video.title.replace(/'/g, "\\'")}')"
+                     style="cursor: pointer; user-select: none;">
+                    <div class="video-thumbnail">
+                        <img src="${video.thumbnail_url}" 
+                             alt="${video.title.replace(/"/g, '&quot;')}" 
+                             onerror="this.src='https://via.placeholder.com/320x180/FF6161/FFFFFF?text=📺+Video+Thumbnail';"
+                             loading="lazy">
+                        <div class="play-button">▶</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                        <div class="video-details">
+                            <span class="channel-name">${video.channel_name}</span>
+                            ${video.duration ? `<span class="duration">${video.duration}</span>` : ''}
+                            ${video.view_count ? `<span class="view-count">${formatViewCount(video.view_count)} views</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        htmlContent += '</div>';
+        messageContent.innerHTML = htmlContent;
+        
+        const timestamp = document.createElement('div');
+        timestamp.className = 'message-time';
+        timestamp.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        recommendationsDiv.appendChild(avatar);
+        recommendationsDiv.appendChild(messageContent);
+        messageContent.appendChild(timestamp);
+        
+        chatBox.appendChild(recommendationsDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+    function formatViewCount(count) {
+        if (count >= 1000000) {
+            return (count / 1000000).toFixed(1) + 'M';
+        } else if (count >= 1000) {
+            return (count / 1000).toFixed(1) + 'K';
+        } else {
+            return count.toString();
+        }
     }
 
     function generateFallbackResponse(userMessage) {
@@ -237,6 +308,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 chatBox.innerHTML = '<div class="message ai-message"><div class="message-avatar">🤖</div><div class="message-content"><strong>AI:</strong> Hello! How can I assist you with your studies today?</div><div class="message-time">Just now</div></div>';
             }
         }
+    };
+
+    window.openVideo = function(url, title) {
+        // Add visual feedback
+        if (soundNotifications && soundNotifications.checked) {
+            playNotificationSound();
+        }
+        
+        // Add visual notification to chat
+        addMessage(`🎥 Opening video: "${title}"`, 'ai');
+        
+        // Open video after a short delay for better UX
+        setTimeout(() => {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }, 500);
     };
 
     window.showTab = function(tabName) {
@@ -448,7 +534,162 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Add CSS for typing indicator animation
+// Add CSS for typing indicator animation and YouTube recommendations
 const style = document.createElement('style');
-style.textContent = '.typing-dots { display: inline-block; } .typing-dots span { opacity: 0; animation: typing 1.4s infinite; } .typing-dots span:nth-child(1) { animation-delay: 0s; } .typing-dots span:nth-child(2) { animation-delay: 0.2s; } .typing-dots span:nth-child(3) { animation-delay: 0.4s; } @keyframes typing { 0%, 60%, 100% { opacity: 0; } 30% { opacity: 1; } }';
+style.textContent = `
+.typing-dots { 
+    display: inline-block; 
+} 
+.typing-dots span { 
+    opacity: 0; 
+    animation: typing 1.4s infinite; 
+} 
+.typing-dots span:nth-child(1) { 
+    animation-delay: 0s; 
+} 
+.typing-dots span:nth-child(2) { 
+    animation-delay: 0.2s; 
+} 
+.typing-dots span:nth-child(3) { 
+    animation-delay: 0.4s; 
+} 
+@keyframes typing { 
+    0%, 60%, 100% { opacity: 0; } 
+    30% { opacity: 1; } 
+}
+
+/* YouTube Recommendations Styles */
+.youtube-recommendations {
+    max-width: 100%;
+}
+
+.youtube-videos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.youtube-video {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+}
+
+.youtube-video::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.youtube-video:hover::before {
+    transform: translateX(100%);
+}
+
+.youtube-video:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.video-thumbnail {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.youtube-video:hover .video-thumbnail img {
+    transform: scale(1.05);
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.youtube-video:hover .play-button {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+    background: rgba(255, 0, 0, 1);
+}
+
+.video-info {
+    color: white;
+}
+
+.video-title {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.video-details {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.channel-name {
+    font-weight: 500;
+}
+
+.duration, .view-count {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 768px) {
+    .youtube-videos {
+        grid-template-columns: 1fr;
+    }
+    
+    .video-thumbnail {
+        height: 120px;
+    }
+}
+`;
 document.head.appendChild(style);

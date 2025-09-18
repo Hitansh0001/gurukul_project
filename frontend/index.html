@@ -52,13 +52,56 @@
     </main>
 
     <script>
-        // Redirect to dashboard after 2 seconds or on any click
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 3000);
+        // Auto-redirect to dashboard after 5 seconds, but allow navigation clicks
+        let autoRedirectTimer;
         
-        document.addEventListener('click', () => {
+        function startAutoRedirect() {
+            autoRedirectTimer = setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 5000);
+        }
+        
+        function stopAutoRedirect() {
+            if (autoRedirectTimer) {
+                clearTimeout(autoRedirectTimer);
+            }
+        }
+        
+        // Start auto-redirect timer
+        startAutoRedirect();
+        
+        // Handle clicks - allow navigation but stop auto-redirect for other clicks
+        document.addEventListener('click', function(e) {
+            const clickedElement = e.target;
+            
+            // Check if clicked element is a navigation link
+            if (clickedElement.tagName === 'A' && clickedElement.href) {
+                // Allow navigation - stop auto-redirect
+                stopAutoRedirect();
+                return; // Let the link work normally
+            }
+            
+            // Check if clicked element is inside a navigation link
+            const parentLink = clickedElement.closest('a');
+            if (parentLink && parentLink.href) {
+                stopAutoRedirect();
+                return; // Let the link work normally
+            }
+            
+            // For other clicks, go to dashboard
+            stopAutoRedirect();
             window.location.href = 'dashboard.html';
+        });
+        
+        // Stop auto-redirect on mouse movement to give user control
+        let mouseMoveTimer;
+        document.addEventListener('mousemove', function() {
+            if (mouseMoveTimer) {
+                clearTimeout(mouseMoveTimer);
+            }
+            mouseMoveTimer = setTimeout(() => {
+                stopAutoRedirect();
+            }, 1000);
         });
     </script>
 </body>

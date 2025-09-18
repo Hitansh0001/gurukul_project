@@ -4,10 +4,6 @@ echo Student Helper AI - Starting Server
 echo ====================================
 echo.
 
-echo Activating virtual environment...
-call .venv\Scripts\activate.bat
-
-echo.
 echo Starting FastAPI server on http://localhost:8000
 echo.
 echo ====================================
@@ -22,6 +18,6 @@ echo ====================================
 echo.
 
 cd /d "%~dp0"
-python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+python server.py
 
 pause
