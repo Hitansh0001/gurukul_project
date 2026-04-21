@@ -146,4 +146,5 @@ If you encounter issues:
 - CORS is enabled for development; adjust origins for production.
 - The YouTube API requires an API key. Without it, mock results are returned.
 - The AI service uses OpenAI Chat Completions if OPENAI_API_KEY is set, otherwise mock.
->>>>>>> gurukul/main
+- himanshu and abhinav are frontend developer
+- >>>>>>> gurukul/main
